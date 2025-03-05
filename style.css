@@ -1,7 +1,11 @@
-/* 初期状態では非表示 */
+/* プレビュー画面（Canvas）を画面上部に配置 */
 #previewCanvas {
-  display: none;
-  border: 2px solid #007bff; /* 視認性のための枠線 */
-  width: auto; /* 画像サイズに応じて変更 */
+  display: none; /* 初期状態は非表示 */
+  position: absolute;
+  top: 0; /* 画面の最上部に配置 */
+  left: 50%; /* 水平方向の中央 */
+  transform: translateX(-50%); /* 水平方向の中央揃え */
+  border: 2px solid #007bff; /* 枠線（視認性向上） */
+  width: auto; /* 画像のサイズに応じて変更 */
   height: auto;
 }
