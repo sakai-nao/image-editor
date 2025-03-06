@@ -1,21 +1,131 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>画像調整アプリ</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8">
+  <title>画像プレビュー & DPI・階調調整</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #f4f4f4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      padding: 20px;
+    }
+
+    #dropArea {
+      width: 350px;
+      height: 120px;
+      border: 3px dashed #007bff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #ffffff;
+      color: #007bff;
+      font-size: 18px;
+      font-weight: bold;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+      margin-bottom: 20px;
+    }
+
+    #dropArea:hover {
+      background-color: #007bff;
+      color: white;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    canvas {
+      border: 2px solid #007bff;
+      border-radius: 10px;
+      background-color: white;
+      max-width: 100%;
+      height: 500px; /* 高さを500pxに固定 */
+      margin-bottom: 20px;
+    }
+
+    .controls {
+      width: 90%;
+      max-width: 600px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    label {
+      font-size: 16px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 5px;
+    }
+
+    .slider {
+      width: 100%;
+      -webkit-appearance: none;
+      appearance: none;
+      height: 10px;
+      border-radius: 5px;
+      background: #ddd;
+      outline: none;
+      opacity: 0.8;
+      transition: 0.2s;
+    }
+
+    .slider:hover {
+      opacity: 1;
+    }
+
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #007bff;
+      cursor: pointer;
+    }
+
+    .slider::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #007bff;
+      cursor: pointer;
+    }
+
+    .slider-value {
+      font-size: 14px;
+      font-weight: bold;
+      color: #007bff;
+      margin-top: 5px;
+    }
+  </style>
 </head>
 <body>
 
-  <!-- 画面上部に固定されたドラッグ&ドロップ領域 -->
-  <div id="dropArea">画像をドロップ / クリックで選択</div>
+  <div id="dropArea">画像をここにドロップ / クリックで選択</div>
   <input type="file" id="fileInput" accept="image/*">
-
-  <!-- プレビュー表示用のCanvas -->
   <canvas id="previewCanvas"></canvas>
 
-  <!-- DPI・階調調整スライダー -->
   <div class="controls">
     <div class="control-group">
       <label for="dpiRange">解像度 (DPI)</label>
@@ -25,8 +135,8 @@
 
     <div class="control-group">
       <label for="toneRange">階調（コントラスト）</label>
-      <input id="toneRange" class="slider" type="range" min="0" max="7" step="1" value="7">
-      <span id="toneValue" class="slider-value">256</span>
+      <input id="toneRange" class="slider" type="range" min="0" max="200" step="1" value="100">
+      <span id="toneValue" class="slider-value">100</span>
     </div>
   </div>
 
