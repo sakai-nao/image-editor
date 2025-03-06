@@ -61,3 +61,57 @@ function loadImage(file) {
   };
   reader.readAsDataURL(file);
 }
+
+// スライダーイベント
+dpiRange.addEventListener("input", () => {
+  dpiValue.innerText = `${dpiRange.value} DPI`;
+  updateCanvas();
+});
+
+toneRange.addEventListener("input", () => {
+  const toneLevels = 2 ** (parseInt(toneRange.value, 10) + 1);
+  toneValue.innerText = toneLevels;
+  updateCanvas();
+});
+
+// 画像処理
+function updateCanvas() {
+  if (!originalImage) return;
+
+  const currentDpi = parseInt(dpiRange.value, 10);
+  dpiValue.innerText = `${currentDpi} DPI`;
+
+  const originalWidth = originalImage.width;
+  const originalHeight = originalImage.height;
+  const scaleFactor = currentDpi / originalWidth;
+
+  const tempCanvas = document.createElement("canvas");
+  const tempCtx = tempCanvas.getContext("2d");
+
+  // DPI の値に応じて縮小した画像サイズを決定
+  tempCanvas.width = Math.max(1, Math.floor(originalWidth * scaleFactor));
+  tempCanvas.height = Math.max(1, Math.floor(originalHeight * scaleFactor));
+
+  tempCtx.imageSmoothingEnabled = false;
+  tempCtx.drawImage(originalImage, 0, 0, tempCanvas.width, tempCanvas.height);
+
+  // 縮小された解像度のまま表示
+  previewCanvas.width = originalWidth;
+  previewCanvas.height = originalHeight;
+  ctx.imageSmoothingEnabled = false;
+  ctx.drawImage(tempCanvas, 0, 0, originalWidth, originalHeight);
+
+  // 階調（減色）処理
+  let imageData = ctx.getImageData(0, 0, originalWidth, originalHeight);
+  let data = imageData.data;
+  const toneLevels = 2 ** (parseInt(toneRange.value, 10) + 1);
+  const step = 255 / (toneLevels - 1);
+
+  for (let i = 0; i < data.length; i += 4) {
+    data[i] = Math.round(data[i] / step) * step;
+    data[i + 1] = Math.round(data[i + 1] / step) * step;
+    data[i + 2] = Math.round(data[i + 2] / step) * step;
+  }
+
+  ctx.putImageData(imageData, 0, 0);
+}
